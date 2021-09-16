@@ -38,22 +38,26 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   });
 
   app.get("/filteredimage", async (req, res) => {
-    let { filter_image_url } = req.query;
-    if (!filter_image_url) {
-      return res.status(400).send('Filter image URL is required.');
+    const image_url = req.query.image_url;
+    console.log("Step one");
+    console.log(image_url);
+    if (!image_url) {
+      return res.status(422).send('Param image_url is required.');
     }
 
     try {
-      const filtered_image_url = await filterImageFromURL(req.body);
+      const filtered_image_url = await filterImageFromURL(image_url);
+      console.log("Step two");
       await res.status(200).sendFile(filtered_image_url, {}, error => {
         if (error) {
-          return res.status(500).send('Something goes wrong.');
+          console.log(error);
+          return res.status(422).send('Something goes wrong.');
         }
       });
-
-      deleteLocalFiles([filtered_image_url]);
+      console.log("Step three");
     }catch (e) {
-      res.status(500).send('Something goes wrong. Check filter image url.');
+      console.log("Throw exception");
+      res.status(422).send('Something goes wrong. Check filter image url.');
     }
   });
 
