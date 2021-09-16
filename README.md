@@ -1,1 +1,2 @@
-# image-filter
+# Image Filter project
+
